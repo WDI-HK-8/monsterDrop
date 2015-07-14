@@ -284,10 +284,6 @@ getMousePos = function(e){
 
 }
 
-range = function(low,high,step){
-    while(low+step<)
-}
-
 
 $('#playScreen').click(function(e){
   console.log("canvas clicked");
