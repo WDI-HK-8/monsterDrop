@@ -1,7 +1,18 @@
+#playScreen {
+	margin-top: 30px;
+	;
 
-canvas {
-	margin-top: 20px;
-	margin-left: 100px;
-	border: 1px solid black;
-	
+}
+
+.indiBranch {
+	stroke: rgba(139,69,19,0);
+	stroke-width: 10; 
+	stroke-linecap: round;
+
+}
+
+.indiBranch:hover{
+	stroke: rgba(139,69,19,1);
+	stroke-width: 10; 
+	stroke-linecap: round;
 }
