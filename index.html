@@ -2,11 +2,11 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
 	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="js/application.js"></script>
@@ -14,45 +14,32 @@
 	<link href="css/customs.css" rel="stylesheet"/>
 	<title>Monster Drop</title>
 </head>
-<body>
-	<!-- NAVBAR -->
-  <nav class="navbar navbar-static-top">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-left">
-        <li><h1>Welcome to Monster Drop</h1></li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
+<body>
 
 <!-- specification / ready buttons -->
-<section class="container-fluid col-sm-12 specification">
-	<div class="row">
-		<ul class="list-unstyled settings">
-			<li class="competitor col-sm-4">
-				<h4>Player against?</h4>
-				<input class="player">
-			</li>
-			<li class="numCol col-sm-4">
-				<h4>Number of verticals</h4>
-				<input class="numOfColumn">
-			</li>
-			<li class="start col-sm-4">
-				<h4>Ready to play?</h4>
-				<button class="go">Go!</button>
-			</li>
-		</ul>
-
-	</div>
-</section>
-
 <section class="container-fluid col-sm-12 mainscreen">
 	<div class="row">
-	 <svg version="1.1" baseProfile="full" width="900" height="600" id="playScreen" class="col-sm-offset-2">
+  <img class="col-sm-2 pigLet" src="/assets/images/Piglet_KH.png">
+  
+  <ul class="list-unstyled settings">
+    <li class="col-sm-4 ">You can still save me....
+      <img src="/assets/images/monster 1_small.png"/>
+    </li>
+    <li class="col-sm-2">Time Left: 
+      <span>10 secs</span>
+    </li>
+    <li class="col-sm-2">Player:
+      <span> Protector</span>
+    </li>
+    <li class="col-sm-2">Score Board 
+      <span id="P1">0 </span>
+      <span>: </span>
+      <span id="P2">0</span>
+    </li>
+  </ul>
+  
+	 <svg version="1.1" baseProfile="full" width="900" height="600" id="playScreen" class="col-sm-offset-2"> 
 
 <!-- background -->
       <rect id="sky" x="0" y="0" width="900" height="200" fill="#6495ED"/>
@@ -314,7 +301,7 @@
 <!-- buttons -->
   <g class="piggyButton">
     <image x="50" y="430" width="100" height="80"
-     xlink:href="assets/images/Piglet_KH.png""/>
+     xlink:href="assets/images/Piglet_KH.png"/>
     <text x="60" y="530" width="30px" height="30px">Put me down!</text>
   </g>
 
@@ -342,14 +329,7 @@
     <text x="745" y="530"> Please unleash me!</text>
   </g>
 
-
-
-
-
-
-
-
-    </svg>
+  </svg>
 
 	</div>
 </section>
