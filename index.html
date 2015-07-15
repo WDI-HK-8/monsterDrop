@@ -20,15 +20,6 @@
   <nav class="navbar navbar-static-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header" id="top_navbar">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#"><img src="#"></a>
-    </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -70,44 +61,49 @@
 
 <!-- set the pig button -->
       <image x="180" y="560" width="40" height="40" 
-     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+     xlink:href="assets/images/Piglet_KH.png"/>
      <rect id="pig0" class="pigCover" x="180" y="560" width="40" height="40"/>
 
       <image x="300" y="560" width="40" height="40" 
-     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+     xlink:href="assets/images/Piglet_KH.png""/>
       <rect id="pig1" class="pigCover" x="300" y="560" width="40" height="40"/>
 
       <image x="420" y="560" width="40" height="40" 
-     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+     xlink:href="assets/images/Piglet_KH.png""/>
       <rect id="pig2" class="pigCover" x="420" y="560" width="40" height="40"/>
 
       <image x="540" y="560" width="40" height="40" 
-     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+     xlink:href="assets/images/Piglet_KH.png""/>
       <rect id="pig3" class="pigCover" x="540" y="560" width="40" height="40"/>
 
       <image x="660" y="560" width="40" height="40" 
-     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+     xlink:href="assets/images/Piglet_KH.png""/>
       <rect id="pig4" class="pigCover" x="660" y="560" width="40" height="40"/>
 
 <!-- set the monster button -->
       <image x="180" y="160" width="40" height="40" 
-     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+     xlink:href="assets/images/monster.jpg"/>
      <rect id="monster0" class="monsterCover" x="180" y="160" width="40" height="40"/>
 
       <image x="300" y="160" width="40" height="40" 
-     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+     xlink:href="assets/images/monster.jpg">
+       <animateMotion
+                begin="0s" dur="10s" repeatCount="1"
+                />
+
+     </image>
       <rect id="monster1" class="monsterCover" x="300" y="160" width="40" height="40"/>
 
       <image x="420" y="160" width="40" height="40" 
-     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+     xlink:href="assets/images/monster.jpg"/>
       <rect id="monster2" class="monsterCover" x="420" y="160" width="40" height="40"/>
 
       <image x="540" y="160" width="40" height="40" 
-     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+     xlink:href="assets/images/monster.jpg"/>
       <rect id="monster3" class="monsterCover" x="540" y="160" width="40" height="40"/>
 
       <image x="660" y="160" width="40" height="40" 
-     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+     xlink:href="assets/images/monster.jpg"/>
       <rect id="monster4" class="monsterCover" x="660" y="160" width="40" height="40"/>
 
 <!-- columns -->
@@ -319,7 +315,7 @@
 <!-- buttons -->
   <g class="piggyButton">
     <image x="50" y="430" width="100" height="80" 
-     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+     xlink:href="assets/images/Piglet_KH.png""/>
     <text x="60" y="530" width="30px" height="30px">Put me down!</text> 
   </g>
 
@@ -329,11 +325,25 @@
     <text x="40" y="250" width="30px" height="30px">Put some branches</text> 
   </g>
 
+  <g class="readyButton">
+    <image x="50" y="430" width="100" height="80" 
+     xlink:href="assets/images/Piglet_KH.png"/>
+    <text x="60" y="530" width="30px" height="30px">Ready?</text> 
+  </g>
+
+  <g class="readyMonsterButton">
+    <image x="775" y="450" width="50" height="50" 
+     xlink:href="assets/images/monster.jpg"/>
+    <text x="745" y="530"> Set me up!</text> 
+  </g>
+
   <g class="monsterButton">
     <image x="775" y="450" width="50" height="50" 
-     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+     xlink:href="assets/images/monster.jpg"/>
     <text x="745" y="530"> Please unleash me!</text> 
   </g>
+
+
 
 
 

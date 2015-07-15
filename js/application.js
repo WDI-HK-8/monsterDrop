@@ -4,16 +4,16 @@ var pig;
 var frame =[];
 
 var game = { 
-    monster: 9,
-    pig: 8,
-    frame:[ [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0]],
+  monster: 9,
+  pig: 8,
+  frame:[ [0,0,0,0,0],
+          [0,0,0,0,0],
+          [0,0,0,0,0],
+          [0,0,0,0,0],
+          [0,0,0,0,0],
+          [0,0,0,0,0],
+          [0,0,0,0,0],
+          [0,0,0,0,0]],
 };
 
 
@@ -27,29 +27,25 @@ var pigCol;
 var pigRow = frame.length-1;
 
 var branch = 1
-var branchPos =[];
 
 var timeLeft = 20;
 
-var Mouse ={
-    x: 0,
-    y: 0,
-}
+var testArray = [];
 
+var monsterTrail = [];
 
 DEBUG = true;
 
 var log = function(msg){
-    if (DEBUG) {
-        console.log(msg);
-    }
+  if (DEBUG) {
+      console.log(msg);
+  }
 };
 
 // where player put the pig (must be last row)
 var setPig = function(col){
-    pigCol = col;
-    log("pig position" + pigCol);
-    
+  pigCol = col;
+  log("pig position" + pigCol);    
 };
 
 // where player put the monster (must be first row)
@@ -108,16 +104,18 @@ var countDown = setInterval(function(){
 },1000)
 
 
+
 // movement
 var checkRightSpot = function(){
-    if((monsterCol<colNum-1)&&(game.frame[monsterRow][monsterCol+1] !== 0)&&(game.frame[monsterRow][monsterCol+1] !== 9)){
-    game.frame[monsterRow][monsterCol+1] = game.monster;
-    monsterCol++;
-    log(game.frame);
-    log('right');
-    return true
-} 
- return false   
+    if((monsterCol<colNum-1)&&(game.frame[monsterRow][monsterCol+1] !== 0) &&
+       (game.frame[monsterRow][monsterCol+1] !== 9)){
+        game.frame[monsterRow][monsterCol+1] = game.monster;
+        monsterCol++;
+        log(game.frame);
+        log('right');
+        return true
+    } 
+    return false   
 };
 
 var checkLeftSpot = function(){
@@ -143,27 +141,34 @@ var checkDownSpot = function(){
 }   ; 
 
 var initMove = function(){
-    game.frame[0][monsterCol] = game.monster
+    game.frame[0][monsterCol] = game.monster;
+    monsterTrail.push(0,monsterCol);
+
 }
 
 var move = function(){
-        if(checkRightSpot() === true){
-            checkRightSpot();
-        } else if (checkLeftSpot() === true){
-            checkLeftSpot();
-        } else {
-            checkDownSpot();
-        }
+  if(checkRightSpot() === true){
+      checkRightSpot();
+      monsterTrail.push(monsterRow,monsterCol);
+  } else if (checkLeftSpot() === true){
+      checkLeftSpot();
+      monsterTrail.push(monsterRow,monsterCol);
+  } else {
+      checkDownSpot();
+      monsterTrail.push(monsterRow,monsterCol);
+  }
 };
 
-var winner = function(){
-    if(monsterCol === pigCol){
-        console.log ("Bloody pig is gone");
-    } else {
-        console.log ("Pig is still alive! Monster is dumb dumb")
-    }
-    
-}
+// monster go and eat
+var moveAuto = function(){
+  if (monsterRow < game.frame.length-1) {
+    move();
+    moveAuto();
+  } else {
+    testWinner()
+  }
+};
+
 
 $(document).ready(function(){
 
@@ -390,6 +395,8 @@ drawBranch = function(){
     group = $(this).prop('id');
     chooseGroup(group);
     $(this).one("click", deleteBranch)
+    $('.branchButton').hide();
+    $('.readyButton').delay(5000).show();
 };
 
 deleteBranch = function(){
@@ -402,6 +409,7 @@ deleteBranch = function(){
 };
 
 $(".indiBranch").one("click", drawBranch);
+$('.branchButton').hide();
  
 
 //set the Pig
@@ -434,6 +442,8 @@ drawPig = function(){
     piggy = $(this).prop('id');
     whichPig(piggy);
     $(this).one("click", deletePig)
+    $('.piggyButton').hide();
+    $('.branchButton').show();
 };
 
 //erase pig position
@@ -444,9 +454,39 @@ deletePig = function(){
     group = $(this).prop('id');
     clearPig();
     $(this).one("click", drawPig)
+    $('.piggyButton').show();
+    
 };
 
-$(".pigCover").one("click", drawPig)
+$(".pigCover").one("click", drawPig);
+$('.readyButton').hide();
+$('.readyButton').click(function(){
+    $('.readyButton').hide();
+    $('.readyMonsterButton').show();
+})
+
+// monsTer trail graphics
+
+graphTrail = function(){
+  var graphCoordArrayX = [];
+  var graphCoordArrayY = [];
+  var graphCoordArrayXY = [];
+  
+  for (var i=0; i<monsterTrail.length; i+=2){
+    graphCoordArrayX.push( [240 + (monsterTrail[i]*45)] )
+  }
+
+  for (var j=1; j<monsterTrail.length; j+=2){
+    graphCoordArrayY.push([200+(monsterTrail[j]*120)])
+  }
+  
+  for (var k=0; k<graphCoordArrayX.length; k++) {
+    graphCoordArrayXY.push( [graphCoordArrayY[k] - 290, graphCoordArrayX[k] - 195] )
+  }
+
+  var result = "M" + graphCoordArrayXY.join(" ");
+  return result
+};
 
 
 //set the Monster
@@ -473,12 +513,16 @@ whichMonster = function(){
 };
 
 drawMonster = function(){
-    log("drawMonster");
     $(this).css('fill', 'rgba(100,149,237,0)')
     log($(this).prop('id'))
     monster = $(this).prop('id');
     whichMonster(monster);
+    
+    $('#'+monster).prev().children().attr("path", graphTrail());
+    debugger
     $(this).one("click", deleteMonster)
+    $('.readyMonsterButton').hide();
+    $('.monsterButton').show();
 };
 
 
@@ -490,16 +534,56 @@ deleteMonster = function(){
     group = $(this).prop('id');
     clearMonster();
     $(this).one("click", drawMonster)
+    $('.monsterButton').show();
 };
 
 $(".monsterCover").one("click", drawMonster)
+$('.monsterButton').hide();
+$('.readyMonsterButton').hide();
 //end of monster drawing/delete
 
-// monster go and eat
+// monster trail algorithm
 $(".monsterButton").click(function(){
-  
+    log("unleash");
+    initMove();
+    moveAuto();
+    graphTrail();
+});
 
-})
+
+
+
+// fail safe (iteration done on all positions)
+testWinner = function(){
+    if(monsterCol === pigCol){
+        log ("Bloody pig is gone");
+        testArray.push("true");
+    } else {
+        log ("Pig is still alive! Monster is dumb dumb")
+    }   testArray.push("false");
+    
+};
+
+monsterSuccess = function(x){
+return x === true;
+} 
+
+testRun = function(){
+    // for (i=0; i<colNum; i++){
+        setMonster(0);
+        initMove();
+        moveAuto();
+        if(testArray.some(monsterSuccess)===true){
+            log("Go ahead!")
+        } else{
+            log("Try not to build a castle.")
+        }
+    }
+// };
+
+
+
+
 
 
 

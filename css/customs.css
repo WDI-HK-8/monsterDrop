@@ -33,7 +33,7 @@
 	fill: rgba(100,149,237,0);
 }
 
-.piggyButton text{
+.piggyButton text, .readyButton text{
 	font-size: 15px;
 	font-style: bold;
 	fill: #F8F8FF;
@@ -45,7 +45,7 @@
 	fill: #F8F8FF;
 }
 
-.monsterButton text{
+.monsterButton text, .readyMonsterButton text{
 	font-size: 15px;
 	font-style: bold;
 	fill: #F8F8FF;
