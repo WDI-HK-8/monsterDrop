@@ -10,8 +10,6 @@
 
 	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="js/application.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link href="bower_components/bootstrap/dist/css/bootstrap.min.css"rel="stylesheet">
 	<link href="css/customs.css" rel="stylesheet"/>
 	<title>Monster Drop</title>
@@ -36,20 +34,6 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-left">
         <li><h1>Welcome to Monster Drop</h1></li>
-      </ul>
-
-
-      <ul class="nav navbar-nav navbar-right">
-          <li id="facebook"><a href="#"><i class="fa fa-facebook-square"></i></a></li>
-          <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-          <li><a href="#"><i class="fa fa-rss"></i></a></li>
-          <li><a href="#"><i class="fa fa-user"></i></a></li>
-          <li><a href="#"><i class="fa fa-question"></i></a></li>
-          <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-          <li><a href="#"><i class="fa fa-search"></i></a></li>
-          <li><form class="navbar-form navbar-right search-box">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -80,9 +64,53 @@
 	<div class="row">
 	 <svg version="1.1" baseProfile="full" width="900" height="600" id="playScreen" class="col-sm-offset-2"> 
 
+<!-- background -->
       <rect id="sky" x="0" y="0" width="900" height="200" fill="#6495ED"/>
       <rect id="grass" x="0" y="200" width="900" height="400" fill="#228b22"/>
 
+<!-- set the pig button -->
+      <image x="180" y="560" width="40" height="40" 
+     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+     <rect id="pig0" class="pigCover" x="180" y="560" width="40" height="40"/>
+
+      <image x="300" y="560" width="40" height="40" 
+     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+      <rect id="pig1" class="pigCover" x="300" y="560" width="40" height="40"/>
+
+      <image x="420" y="560" width="40" height="40" 
+     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+      <rect id="pig2" class="pigCover" x="420" y="560" width="40" height="40"/>
+
+      <image x="540" y="560" width="40" height="40" 
+     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+      <rect id="pig3" class="pigCover" x="540" y="560" width="40" height="40"/>
+
+      <image x="660" y="560" width="40" height="40" 
+     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+      <rect id="pig4" class="pigCover" x="660" y="560" width="40" height="40"/>
+
+<!-- set the monster button -->
+      <image x="180" y="160" width="40" height="40" 
+     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+     <rect id="monster0" class="monsterCover" x="180" y="160" width="40" height="40"/>
+
+      <image x="300" y="160" width="40" height="40" 
+     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+      <rect id="monster1" class="monsterCover" x="300" y="160" width="40" height="40"/>
+
+      <image x="420" y="160" width="40" height="40" 
+     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+      <rect id="monster2" class="monsterCover" x="420" y="160" width="40" height="40"/>
+
+      <image x="540" y="160" width="40" height="40" 
+     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+      <rect id="monster3" class="monsterCover" x="540" y="160" width="40" height="40"/>
+
+      <image x="660" y="160" width="40" height="40" 
+     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+      <rect id="monster4" class="monsterCover" x="660" y="160" width="40" height="40"/>
+
+<!-- columns -->
       <path d="M200 240 v315 M320 240 v315 M440 240 v315 M560 240 v315 M680 240 v315" class="columns" stroke-width="14" stroke-linecap ="round"stroke="#90ee90"/>
 
 
@@ -186,7 +214,7 @@
       <circle cx="440" cy="555" r="3" fill="#d2691e" id="7,3"/>
       </g>
 
-      <!-- B3 -->
+<!-- B3 -->
       <g class="indiBranch" id="group17">
       <circle cx="440" cy="240" r="3" fill="#d2691e" />
         <line x1="440" x2="560" y1="240" y2="240" /> 
@@ -288,8 +316,24 @@
 
   </g>
       
-      
+<!-- buttons -->
+  <g class="piggyButton">
+    <image x="50" y="430" width="100" height="80" 
+     xlink:href="http://static3.wikia.nocookie.net/__cb20110208032728/disney/images/6/68/Piglet_KH.png"/>
+    <text x="60" y="530" width="30px" height="30px">Put me down!</text> 
+  </g>
 
+  <g class="branchButton">
+    <image x="50" y="250" width="100" height="100" 
+     xlink:href="http://www.clker.com/cliparts/L/X/7/n/H/j/transparent-arrow-hi.png"/>
+    <text x="40" y="250" width="30px" height="30px">Put some branches</text> 
+  </g>
+
+  <g class="monsterButton">
+    <image x="775" y="450" width="50" height="50" 
+     xlink:href="https://s-media-cache-ak0.pinimg.com/originals/d5/4f/eb/d54febb3c064087d86c14eebefe3c92c.jpg"/>
+    <text x="745" y="530"> Please unleash me!</text> 
+  </g>
 
 
 

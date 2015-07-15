@@ -16,3 +16,37 @@
 	stroke-width: 10; 
 	stroke-linecap: round;
 }
+
+.pigCover{
+	fill: rgba(34,139,34,1);
+}
+
+.pigCover:hover{
+	fill: rgba(34,139,34,0);
+}
+
+.monsterCover{
+	fill: rgba(100,149,237,1);
+}
+
+.monsterCover:hover{
+	fill: rgba(100,149,237,0);
+}
+
+.piggyButton text{
+	font-size: 15px;
+	font-style: bold;
+	fill: #F8F8FF;
+}
+
+.branchButton text{
+	font-size: 15px;
+	font-style: bold;
+	fill: #F8F8FF;
+}
+
+.monsterButton text{
+	font-size: 15px;
+	font-style: bold;
+	fill: #F8F8FF;
+}
