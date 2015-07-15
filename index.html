@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="js/application.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link href="bower_components/bootstrap/dist/css/bootstrap.min.css"rel="stylesheet">
+	<link href="css/customs.css" rel="stylesheet"/>
+	<title>Monster Drop</title>
+
+</head>
+<body>
+	<!-- NAVBAR -->
+  <nav class="navbar navbar-static-top">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header" id="top_navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"><img src="#"></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-left">
+        <li><h1>Welcome to Monster Drop</h1></li>
+      </ul>
+
+
+      <ul class="nav navbar-nav navbar-right">
+          <li id="facebook"><a href="#"><i class="fa fa-facebook-square"></i></a></li>
+          <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+          <li><a href="#"><i class="fa fa-rss"></i></a></li>
+          <li><a href="#"><i class="fa fa-user"></i></a></li>
+          <li><a href="#"><i class="fa fa-question"></i></a></li>
+          <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+          <li><a href="#"><i class="fa fa-search"></i></a></li>
+          <li><form class="navbar-form navbar-right search-box">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<!-- specification / ready buttons -->
+<section class="container-fluid col-sm-12 specification">
+	<div class="row">
+		<ul class="list-unstyled settings">
+			<li class="competitor col-sm-4">
+				<h4>Player against?</h4>
+				<input class="player">
+			</li>
+			<li class="numCol col-sm-4">
+				<h4>Number of verticals</h4>
+				<input class="numOfColumn">
+			</li>
+			<li class="start col-sm-4">
+				<h4>Ready to play?</h4>
+				<button class="go">Go!</button>
+			</li>
+		</ul>
+		
+	</div>
+</section>
+
+<section class="container-fluid col-sm-12 mainscreen">
+	<div class="row">
+	 <svg version="1.1" baseProfile="full" width="900" height="600" id="playScreen" class="col-sm-offset-2"> 
+
+      <rect id="sky" x="0" y="0" width="900" height="200" fill="#6495ED"/>
+      <rect id="grass" x="0" y="200" width="900" height="400" fill="#228b22"/>
+
+      <path d="M200 240 v315 M320 240 v315 M440 240 v315 M560 240 v315 M680 240 v315" class="columns" stroke-width="14" stroke-linecap ="round"stroke="#90ee90"/>
+
+
+<!-- B1 -->
+<g id="branches">
+      <g class="indiBranch" id="group1">
+        <circle cx="200" cy="240" r="3" fill="#d2691e" />
+          <line x1="200" x2="320" y1="240" y2="240" /> 
+        <circle cx="320" cy="240" r="3" fill="#d2691e" /> 
+      </g>
+
+      <g class="indiBranch" id="group2">
+      <circle cx="200" cy="285" r="3" fill="#d2691e" /> 
+        <line x1="200" x2="320" y1="285" y2="285" />
+      <circle cx="320" cy="285" r="3" fill="#d2691e"/> 
+      </g>
+
+      <g class="indiBranch" id="group3">
+      <circle cx="200" cy="330" r="3" fill="#d2691e"/>
+        <line x1="200" x2="320" y1="330" y2="330" /> 
+      <circle cx="320" cy="330" r="3" fill="#d2691e"/> 
+      </g>
+
+      <g class="indiBranch" id="group4">
+      <circle cx="200" cy="375" r="3" fill="#d2691e" /> 
+      <line x1="200" x2="320" y1="375" y2="375" />
+      <circle cx="320" cy="375" r="3" fill="#d2691e" /> 
+      </g>
+
+      <g class="indiBranch" id="group5">
+      <circle cx="200" cy="420" r="3" fill="#d2691e" /> 
+        <line x1="200" x2="320" y1="420" y2="420" />
+      <circle cx="320" cy="420" r="3" fill="#d2691e" /> 
+      </g>
+
+      <g class="indiBranch" id="group6">
+      <circle cx="200" cy="465" r="3" fill="#d2691e" /> 
+      <line x1="200" x2="320" y1="465" y2="465" />
+      <circle cx="320" cy="465" r="3" fill="#d2691e" /> 
+      </g>
+
+      <g class="indiBranch" id="group7">
+      <circle cx="200" cy="510" r="3" fill="#d2691e" />
+      <line x1="200" x2="320" y1="510" y2="510" /> 
+      <circle cx="320" cy="510" r="3" fill="#d2691e" /> 
+      </g>
+
+      <g class="indiBranch" id="group8">
+      <circle cx="200" cy="555" r="3" fill="#d2691e" /> 
+        <line x1="200" x2="320" y1="555" y2="555" />
+      <circle cx="320" cy="555" r="3" fill="#d2691e" /> 
+      </g>
+
+<!-- B2 -->
+      <g class="indiBranch" id="group9">
+      <circle cx="320" cy="240" r="3" fill="#d2691e" />
+        <line x1="320" x2="440" y1="240" y2="240" /> 
+      <circle cx="440" cy="240" r="3" fill="#d2691e" /> 
+      </g>
+
+      <g class="indiBranch" id="group10">
+      <circle cx="320" cy="285" r="3" fill="#d2691e" />
+        <line x1="320" x2="440" y1="285" y2="285" /> 
+      <circle cx="440" cy="285" r="3" fill="#d2691e" /> 
+      </g>
+
+      <g class="indiBranch" id="group11">
+      <circle cx="440" cy="330" r="3" fill="#d2691e" />
+      <line x1="320" x2="440" y1="330" y2="330" /> 
+      <circle cx="440" cy="330" r="3" fill="#d2691e" /> 
+        
+      </g>
+
+      <g class="indiBranch" id="group12">
+      <circle cx="440" cy="375" r="3" fill="#d2691e" /> 
+      <line x1="320" x2="440" y1="375" y2="375" />
+      <circle cx="440" cy="375" r="3" fill="#d2691e" /> 
+      </g>
+
+      <g class="indiBranch" id="group13">
+      <circle cx="440" cy="420" r="3" fill="#d2691e" /> 
+        <line x1="320" x2="440" y1="420" y2="420" />
+      <circle cx="440" cy="420" r="3" fill="#d2691e" /> 
+      </g>
+
+      <g class="indiBranch" id="group14">
+      <circle cx="440" cy="465" r="3" fill="#d2691e" /> 
+      <line x1="320" x2="440" y1="465" y2="465" />
+      <circle cx="440" cy="465" r="3" fill="#d2691e" id="5,3"/> 
+      </g>
+
+      <g class="indiBranch" id="group15">
+      <circle cx="440" cy="510" r="3" fill="#d2691e" /> 
+        <line x1="320" x2="440" y1="510" y2="510" />
+      <circle cx="440" cy="510" r="3" fill="#d2691e" id="6,3"/> 
+      </g>
+
+      <g class="indiBranch" id="group16">
+      <circle cx="440" cy="555" r="3" fill="#d2691e" /> 
+        <line x1="320" x2="440" y1="555" y2="555" />
+      <circle cx="440" cy="555" r="3" fill="#d2691e" id="7,3"/>
+      </g>
+
+      <!-- B3 -->
+      <g class="indiBranch" id="group17">
+      <circle cx="440" cy="240" r="3" fill="#d2691e" />
+        <line x1="440" x2="560" y1="240" y2="240" /> 
+      <circle cx="560" cy="240" r="3" fill="#d2691e" id="0,3"/> 
+      </g>
+
+      <g class="indiBranch" id="group18">
+      <circle cx="440" cy="285" r="3" fill="#d2691e" />
+        <line x1="440" x2="560" y1="285" y2="285" /> 
+      <circle cx="560" cy="285" r="3" fill="#d2691e" id="1,3"/> 
+      </g>
+
+      <g class="indiBranch" id="group19">
+      <circle cx="440" cy="330" r="3" fill="#d2691e" />
+      <line x1="440" x2="560" y1="330" y2="330" /> 
+      <circle cx="560" cy="330" r="3" fill="#d2691e" id="2,3"/> 
+        
+      </g>
+
+      <g class="indiBranch" id="group20">
+      <circle cx="440" cy="375" r="3" fill="#d2691e" /> 
+      <line x1="440" x2="560" y1="375" y2="375" />
+      <circle cx="560" cy="375" r="3" fill="#d2691e" id="3,3"/> 
+      </g>
+
+      <g class="indiBranch" id="group21">
+      <circle cx="440" cy="420" r="3" fill="#d2691e" /> 
+        <line x1="440" x2="560" y1="420" y2="420" />
+      <circle cx="560" cy="420" r="3" fill="#d2691e" id="4,3"/> 
+      </g>
+
+      <g class="indiBranch" id="group22">
+      <circle cx="440" cy="465" r="3" fill="#d2691e" /> 
+      <line x1="440" x2="560" y1="465" y2="465" />
+      <circle cx="560" cy="465" r="3" fill="#d2691e" id="5,3"/> 
+      </g>
+
+      <g class="indiBranch" id="group23">
+      <circle cx="440" cy="510" r="3" fill="#d2691e" /> 
+        <line x1="440" x2="560" y1="510" y2="510" />
+      <circle cx="560" cy="510" r="3" fill="#d2691e" id="6,3"/> 
+      </g>
+
+      <g class="indiBranch" id="group24">
+      <circle cx="440" cy="555" r="3" fill="#d2691e" /> 
+        <line x1="440" x2="560" y1="555" y2="555" />
+      <circle cx="560" cy="555" r="3" fill="#d2691e" id="7,3"/>
+      </g>
+
+<!-- B4 -->
+      <g class="indiBranch" id="group25">
+      <circle cx="560" cy="240" r="3" fill="#d2691e" /> 
+        <line x1="560" x2="680" y1="240" y2="240" /> 
+      <circle cx="560" cy="240" r="3" fill="#d2691e" id="0,4"/> 
+      </g>
+
+      <g class="indiBranch" id="group26">
+      <circle cx="560" cy="285" r="3" fill="#d2691e" /> 
+        <line x1="560" x2="680" y1="285" y2="285" /> 
+      <circle cx="680" cy="285" r="3" fill="#d2691e" id="1,4"/> 
+      </g>
+
+      <g class="indiBranch" id="group27">
+      <circle cx="560" cy="330" r="3" fill="#d2691e" /> 
+      <line x1="560" x2="680" y1="330" y2="330" /> 
+      <circle cx="680" cy="330" r="3" fill="#d2691e" id="2,4"/> 
+        
+      </g>
+
+      <g class="indiBranch" id="group28">
+      <circle cx="560" cy="375" r="3" fill="#d2691e" /> 
+      <line x1="560" x2="680" y1="375" y2="375" />
+      <circle cx="680" cy="375" r="3" fill="#d2691e" id="3,4"/> 
+      </g>
+
+      <g class="indiBranch" id="group29">
+      <circle cx="560" cy="420" r="3" fill="#d2691e" /> 
+        <line x1="560" x2="680" y1="420" y2="420" />
+      <circle cx="680" cy="420" r="3" fill="#d2691e" id="4,4"/> 
+      </g>
+
+      <g class="indiBranch" id="group30">
+      <circle cx="560" cy="465" r="3" fill="#d2691e" /> 
+      <line x1="560" x2="680" y1="465" y2="465" />
+      <circle cx="680" cy="465" r="3" fill="#d2691e" id="5,4"/> 
+      </g>
+
+      <g class="indiBranch" id="group31">
+      <circle cx="560" cy="510" r="3" fill="#d2691e" /> 
+        <line x1="560" x2="680" y1="510" y2="510" />
+      <circle cx="680" cy="510" r="3" fill="#d2691e" id="6,4"/> 
+      </g>
+
+      <g class="indiBranch" id="group32">
+      <circle cx="560" cy="555" r="3" fill="#d2691e" />
+        <line x1="560" x2="680"y1="555" y2="555" />
+      <circle cx="680" cy="555" r="3" fill="#d2691e" id="7,4"/>
+      </g>
+
+  </g>
+      
+      
+
+
+
+
+
+
+  
+    </svg>
+		
+	</div>
+</section>
+
+
+</body>
+</html>

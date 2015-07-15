@@ -4,9 +4,9 @@ WDI HK 8 project 1
 ### Before we go into the game
 
 - Vertical lines are called columns  
-- Horizontal lines are called rows  
+- Horizontal lines are called branches  
 - player can choose who to play against (computer, another player or oneself) 
-- There are 5 matches to a game  
+- There are 3 matches to a game  
 - Players' goals and role swaps every match 
 
 
@@ -22,5 +22,5 @@ WDI HK 8 project 1
 - Player 2 will be **Predator** in the 1st match  
 - Within 10 seconds, through anaylsing the maze, P2 will decide which column to place the monster.  
 - Monster will start from the top and make its way to the bottom.  
-- Monster will cross the branch whenever its sees one. Because the Monster is right handed, he will always choose right first before going left.
+- Monster will cross the branch whenever its sees one. Because the Monster is left handed, he will always choose left (your right) first before going right (your left).
 - if monster meets the pig, monster will shred the pig into bacon, P1 loses. If otherwise P1, wins.

@@ -1,0 +1,25 @@
+{
+  "name": "monsterDrop_WDI",
+  "version": "0.0.1",
+  "homepage": "https://github.com/WDI-HK-8/monsterDrop",
+  "authors": [
+    "weijefffrey <jeffreycswei@gmail.com>"
+  ],
+  "description": "monsterDrop",
+  "main": "index.html",
+  "keywords": [
+    "monsterDrop"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5"
+  }
+}
