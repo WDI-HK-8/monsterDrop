@@ -1,593 +1,386 @@
-// set up (frame, pig, monster, branch)
-var monster ;
-var pig;
-var frame =[];
-
-var game = { 
-  monster: 9,
-  pig: 8,
-  frame:[ [0,0,0,0,0],
-          [0,0,0,0,0],
-          [0,0,0,0,0],
-          [0,0,0,0,0],
-          [0,0,0,0,0],
-          [0,0,0,0,0],
-          [0,0,0,0,0],
-          [0,0,0,0,0]],
-};
-
-
-var colNum =5
-var rowNum;
-
-var monsterCol=0
-var monsterRow=0;
-
-var pigCol;
-var pigRow = frame.length-1;
-
-var branch = 1
-
-var timeLeft = 20;
-
-var testArray = [];
-
-var monsterTrail = [];
-
-DEBUG = true;
-
-var log = function(msg){
-  if (DEBUG) {
-      console.log(msg);
-  }
-};
-
-// where player put the pig (must be last row)
-var setPig = function(col){
-  pigCol = col;
-  log("pig position" + pigCol);    
-};
-
-// where player put the monster (must be first row)
-var setMonster = function(col){
-    monsterCol = col;
-    log("monster position" + monsterCol);
-    
-}; 
-
-// set branch head (head --> end)
-var setBranch = function(row, col){
-    if((row<game.frame.length)){
-        game.frame[row][col] = branch;
-        game.frame[row][col+1] = branch;
-    }
-    branchPos = [row,col]; 
-};
-
-var clearBranch = function(row, col){
-    if((row<game.frame.length) && (col === 0)){
-        game.frame[row][col] = 0;
-        game.frame[row][col+1] = 0;
-    } else{
-        game.frame[row][col+1] = 0;
-    }
-};
-
-//clear position and clear screen
-var clearPig = function(){
-    pigCol = null;
-    
-};
-
-var clearMonster = function(){
-    monsterCol = null;
-    
-};
-
-var clearScreen = function(row, col){
-    for(row=0; row < frame.length; row++){
-        for(col =0; col < colNum; col++){
-            frame[row][col] = 0;
-        }
-    }
-};
-
-//timer for Set up and respond
-var minusSecond = function(){
-  timeLeft --;
-  return timeLeft;
-};
-
-var countDown = setInterval(function(){
-    minusSecond();
-    if(timeLeft <= 0){clearInterval(countDown)}
-},1000)
-
-
-
-// movement
-var checkRightSpot = function(){
-    if((monsterCol<colNum-1)&&(game.frame[monsterRow][monsterCol+1] !== 0) &&
-       (game.frame[monsterRow][monsterCol+1] !== 9)){
-        game.frame[monsterRow][monsterCol+1] = game.monster;
-        monsterCol++;
-        log(game.frame);
-        log('right');
-        return true
-    } 
-    return false   
-};
-
-var checkLeftSpot = function(){
-    if((monsterCol-1>=0)&&(game.frame[monsterRow][monsterCol-1] !== 0)&&(game.frame[monsterRow][monsterCol-1] !== 9)){
-    game.frame[monsterRow][monsterCol-1] = game.monster;
-    monsterCol--;
-    log(game.frame)
-    log('left')
-    return true;
-} 
-    return false;
-};
-    
-var checkDownSpot = function(){
-    if(monsterRow<game.frame.length){
-    monsterRow++;
-    game.frame[monsterRow][monsterCol] = game.monster;
-    log(game.frame)
-    log('down')
-    return true
-} 
-    return false
-}   ; 
-
-var initMove = function(){
-    game.frame[0][monsterCol] = game.monster;
-    monsterTrail.push(0,monsterCol);
-
+var Pig = function(){
+  this.id  = 8;
+  this.col = 0;
+  this.row = 7;
 }
 
-var move = function(){
-  if(checkRightSpot() === true){
-      checkRightSpot();
-      monsterTrail.push(monsterRow,monsterCol);
-  } else if (checkLeftSpot() === true){
-      checkLeftSpot();
-      monsterTrail.push(monsterRow,monsterCol);
-  } else {
-      checkDownSpot();
-      monsterTrail.push(monsterRow,monsterCol);
+var Monster = function() {
+  this.id  = 9;
+  this.col = 0;
+  this.row = 0;
+  this.trail = [];
+}
+
+var Branches = function() {
+  this.id  = 1;
+  this.all = [];
+  this.test = [];
+}
+
+// set up (frame, pig, monster, branch)
+var Game = function() {
+  this.pig      = new Pig();
+  this.monster  = new Monster();
+  this.branches = new Branches();
+
+  this.colNum = 5;
+  this.rowNum = 8;
+  this.frame = [[0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0]];
+}
+
+//--------------------------------------------------
+// setElements
+//--------------------------------------------------
+Game.prototype.setPig = function(col) {
+  this.pig.col = col;
+};
+
+Game.prototype.setMonster = function(col) {
+  this.monster.col = col;
+};
+
+Game.prototype.setBranch = function(row, col) {
+  if (row < this.frame.length) {
+      this.frame[row][col]   = this.branch.id;
+      this.frame[row][col+1] = this.branch.id;
   }
+};
+
+//--------------------------------------------------
+// clearElements
+//--------------------------------------------------
+Game.prototype.clearPig = function() {
+  this.pig.col = null;
+};
+
+Game.prototype.clearMonster = function() {
+  this.monster.col = null;
+};
+
+Game.prototype.clearBranch = function(row, col) {
+  if (row < this.frame.length  && col === 0) {
+    this.frame[row][col]   = 0;
+    this.frame[row][col+1] = 0;
+  } else {
+    this.frame[row][col+1] = 0;
+  }
+};
+
+Game.prototype.clearScreen = function() {
+  for(var row=0; row < frame.length; row++){
+    for(var col=0; col < colNum; col++){
+      this.frame[row][col] = 0;
+    }
+  }
+};
+
+//--------------------------------------------------
+// checkRoutes (right, left, down)
+//--------------------------------------------------
+Game.prototype.checkRightSpot = function() {
+  if (this.monster.col < this.colNum-1 &&
+      this.frame[this.monster.row][this.monster.col+1] !== 0 &&
+      this.frame[this.monster.row][this.monster.col+1] !== 9)
+  {
+    this.frame[this.monster.row][this.monster.col+1] = this.monster.id;
+    this.monster.col++;
+    return true;
+  } else {
+    return false;
+  }
+};
+
+Game.prototype.checkLeftSpot = function() {
+  if (this.monster.col - 1 >= 0 &&
+      this.frame[this.monster.row][this.monster.col-1] !== 0 &&
+      this.frame[this.monster.row][this.monster.col-1] !== 9)
+  {
+    this.frame[this.monster.row][this.monster.col-1] = this.monster.id;
+    this.monster.col--;
+    return true;
+  } else {
+    return false;
+  }
+};
+
+Game.prototype.checkDownSpot = function() {
+  if(this.monster.row < this.frame.length) {
+    this.monster.row++;
+    this.frame[this.monster.row][this.monster.col] = this.monster.id;
+    return true;
+  } else {
+    return false;
+  }
+};
+
+//--------------------------------------------------
+// Movements
+//--------------------------------------------------
+
+Game.prototype.moveMonsterDown = function() {
+  this.frame[0][this.monster.col] = this.monster.id;
+  this.monster.trail.push(0, this.monster.col);
+}
+
+// TODO: review checking if monster should move right VS move right
+Game.prototype.move = function() {
+  if (this.checkRightSpot()) {
+      this.checkRightSpot();
+  } else if (this.checkLeftSpot()){
+      this.checkLeftSpot();
+  } else {
+      this.checkDownSpot();
+  }
+  this.monster.trail.push(this.monster.row, this.monster.col);
 };
 
 // monster go and eat
-var moveAuto = function(){
-  if (monsterRow < game.frame.length-1) {
-    move();
-    moveAuto();
+Game.prototype.moveAuto = function() {
+  if (this.monster.row < this.frame.length-1) {
+    this.move();
+    this.moveAuto();
   } else {
-    testWinner()
+    this.testWinner()
   }
 };
 
+Game.prototype.testWinner = function() {
+  if (this.monster.col === this.pig.col){
+    console.log ("Bloody pig is gone");
+    this.branches.test.push("true");
+  } else {
+    console.log ("Pig is still alive! Monster is dumb dumb");
+    this.branches.test.push("false");
+  }
+};
 
-$(document).ready(function(){
+var game    = new Game();
+var timeLeft = 20;
+
+//timer for Set up and respond
+var countDown = setInterval(function(){
+  if (--timeLeft <= 0){
+    clearInterval(countDown)
+  }
+}, 1000);
 
 //set branches in graphics
-chooseGroup = function(){
-        switch(group) {
-        case 'group1':
-            setBranch(0,0)
-            break;
-        case 'group2':
-            setBranch(1,0)
-            break;
-        case 'group3':
-            setBranch(2,0)
-            break;
-        case 'group4':
-            setBranch(3,0)
-            break;
-        case 'group5':
-            setBranch(4,0)
-            break;
-        case 'group6':
-            setBranch(5,0)
-            break;
-        case 'group7':
-            setBranch(6,0)
-            break;
-        case 'group8':
-            setBranch(7,0)
-            break;
+var chooseGroup = function() {
+  switch (group) {
+    case 'group1':  game.setBranch(0,0); break;
+    case 'group2':  game.setBranch(1,0); break;
+    case 'group3':  game.setBranch(2,0); break;
+    case 'group4':  game.setBranch(3,0); break;
+    case 'group5':  game.setBranch(4,0); break;
+    case 'group6':  game.setBranch(5,0); break;
+    case 'group7':  game.setBranch(6,0); break;
+    case 'group8':  game.setBranch(7,0); break;
+    case 'group9':  game.setBranch(0,1); break;
+    case 'group10': game.setBranch(1,1); break;
+    case 'group11': game.setBranch(2,1); break;
+    case 'group12': game.setBranch(3,1); break;
+    case 'group13': game.setBranch(4,1); break;
+    case 'group14': game.setBranch(5,1); break;
+    case 'group15': game.setBranch(6,1); break;
+    case 'group16': game.setBranch(7,1); break;
+    case 'group17': game.setBranch(0,2); break;
+    case 'group18': game.setBranch(1,2); break;
+    case 'group19': game.setBranch(2,2); break;
+    case 'group20': game.setBranch(3,2); break;
+    case 'group21': game.setBranch(4,2); break;
+    case 'group22': game.setBranch(5,2); break;
+    case 'group23': game.setBranch(6,2); break;
+    case 'group24': game.setBranch(7,2); break;
+    case 'group25': game.setBranch(0,3); break;
+    case 'group26': game.setBranch(1,3); break;
+    case 'group27': game.setBranch(2,3); break;
+    case 'group28': game.setBranch(3,3); break;
+    case 'group29': game.setBranch(4,3); break;
+    case 'group30': game.setBranch(5,3); break;
+    case 'group31': game.setBranch(6,3); break;
+    case 'group32': game.setBranch(7,3); break;
 
-        case 'group9':
-            setBranch(0,1)
-            break;
-        case 'group10':
-            setBranch(1,1)
-            break;
-        case 'group11':
-            setBranch(2,1)
-            break;
-        case 'group12':
-            setBranch(3,1)
-            break;
-        case 'group13':
-            setBranch(4,1)
-            break;
-        case 'group14':
-            setBranch(5,1)
-            break;
-        case 'group15':
-            setBranch(6,1)
-            break;
-        case 'group16':
-            setBranch(7,1)
-            break;
-
-        case 'group17':
-        setBranch(0,2)
-            break;
-        case 'group18':
-        setBranch(1,2)
-            break;
-        case 'group19':
-        setBranch(2,2)
-            break;
-        case 'group20':
-        setBranch(3,2)
-            break;
-        case 'group21':
-        setBranch(4,2)
-            break;
-        case 'group22':
-        setBranch(5,2)
-            break;
-        case 'group23':
-        setBranch(6,2)
-            break;
-        case 'group24':
-        setBranch(7,2)
-            break;
-
-        case 'group25':
-        setBranch(0,3)
-            break;
-        case 'group26':
-        setBranch(1,3)
-            break;
-        case 'group27':
-        setBranch(2,3)
-            break;
-        case 'group28':
-        setBranch(3,3)
-            break;
-        case 'group29':
-        setBranch(4,3)
-            break;
-        case 'group30':
-        setBranch(5,3)
-            break;
-        case 'group31':
-        setBranch(6,3)
-            break;
-        case 'group32':
-        setBranch(7,3)
-            break;
-        default:
-            console.log('default');
-        }
+    default:
+        console.console.log('default');
+  }
 };
 
-   
 //erase branches
-clearGroup = function(){
-        switch(group) {
-        case 'group1':
-            clearBranch(0,0)
-            break;
-        case 'group2':
-            clearBranch(1,0)
-            break;
-        case 'group3':
-            clearBranch(2,0)
-            break;
-        case 'group4':
-            clearBranch(3,0)
-            break;
-        case 'group5':
-            clearBranch(4,0)
-            break;
-        case 'group6':
-            clearBranch(5,0)
-            break;
-        case 'group7':
-            clearBranch(6,0)
-            break;
-        case 'group8':
-            clearBranch(7,0)
-            break;
-
-        case 'group9':
-            clearBranch(0,1)
-            break;
-        case 'group10':
-            clearBranch(1,1)
-            break;
-        case 'group11':
-            clearBranch(2,1)
-            break;
-        case 'group12':
-            clearBranch(3,1)
-            break;
-        case 'group13':
-            clearBranch(4,1)
-            break;
-        case 'group14':
-            clearBranch(5,1)
-            break;
-        case 'group15':
-            clearBranch(6,1)
-            break;
-        case 'group16':
-            clearBranch(7,1)
-            break;
-
-        case 'group17':
-        clearBranch(0,2)
-            break;
-        case 'group18':
-        clearBranch(1,2)
-            break;
-        case 'group19':
-        clearBranch(2,2)
-            break;
-        case 'group20':
-        clearBranch(3,2)
-            break;
-        case 'group21':
-        clearBranch(4,2)
-            break;
-        case 'group22':
-        clearBranch(5,2)
-            break;
-        case 'group23':
-        clearBranch(6,2)
-            break;
-        case 'group24':
-        clearBranch(7,2)
-            break;
-
-        case 'group25':
-        clearBranch(0,3)
-            break;
-        case 'group26':
-        clearBranch(1,3)
-            break;
-        case 'group27':
-        clearBranch(2,3)
-            break;
-        case 'group28':
-        clearBranch(3,3)
-            break;
-        case 'group29':
-        clearBranch(4,3)
-            break;
-        case 'group30':
-        clearBranch(5,3)
-            break;
-        case 'group31':
-        clearBranch(6,3)
-            break;
-        case 'group32':
-        clearBranch(7,3)
-            break;
-        default:
-            console.log('default');
-        }
+var clearGroup = function(){
+  switch(group) {
+    case 'group1':  game.clearBranch(0,0); break;
+    case 'group2':  game.clearBranch(1,0); break;
+    case 'group3':  game.clearBranch(2,0); break;
+    case 'group4':  game.clearBranch(3,0); break;
+    case 'group5':  game.clearBranch(4,0); break;
+    case 'group6':  game.clearBranch(5,0); break;
+    case 'group7':  game.clearBranch(6,0); break;
+    case 'group8':  game.clearBranch(7,0); break;
+    case 'group9':  game.clearBranch(0,1); break;
+    case 'group10': game.clearBranch(1,1); break;
+    case 'group11': game.clearBranch(2,1); break;
+    case 'group12': game.clearBranch(3,1); break;
+    case 'group13': game.clearBranch(4,1); break;
+    case 'group14': game.clearBranch(5,1); break;
+    case 'group15': game.clearBranch(6,1); break;
+    case 'group16': game.clearBranch(7,1); break;
+    case 'group17': game.clearBranch(0,2); break;
+    case 'group18': game.clearBranch(1,2); break;
+    case 'group19': game.clearBranch(2,2); break;
+    case 'group20': game.clearBranch(3,2); break;
+    case 'group21': game.clearBranch(4,2); break;
+    case 'group22': game.clearBranch(5,2); break;
+    case 'group23': game.clearBranch(6,2); break;
+    case 'group24': game.clearBranch(7,2); break;
+    case 'group25': game.clearBranch(0,3); break;
+    case 'group26': game.clearBranch(1,3); break;
+    case 'group27': game.clearBranch(2,3); break;
+    case 'group28': game.clearBranch(3,3); break;
+    case 'group29': game.clearBranch(4,3); break;
+    case 'group30': game.clearBranch(5,3); break;
+    case 'group31': game.clearBranch(6,3); break;
+    case 'group32': game.clearBranch(7,3); break;
+    default:
+      console.console.log('default');
+  }
 };
 
-
-drawBranch = function(){
-    console.log("drawBranch");
-    $(this).css('stroke', 'rgba(139,69,19,1)')
-    console.log($(this).prop('id'))
-    group = $(this).prop('id');
-    chooseGroup(group);
-    $(this).one("click", deleteBranch)
-    $('.branchButton').hide();
-    $('.readyButton').delay(5000).show();
+var drawBranch = function() {
+  $(this).css('stroke', 'rgba(139,69,19,1)');
+  group = $(this).prop('id');
+  chooseGroup(group);
+  $(this).one("click", deleteBranch);
+  $('.branchButton').hide();
+  $('.readyButton').delay(5000).show();
 };
 
-deleteBranch = function(){
-    console.log("deleteBranch");
-    $(this).css('stroke', 'rgba(139,69,19,0)')
-    console.log($(this).prop('id'))
-    group = $(this).prop('id');
-    clearGroup(group);
-    $(this).one("click", drawBranch)
+var deleteBranch = function() {
+  $(this).css('stroke', 'rgba(139,69,19,0)');
+  group = $(this).prop('id');
+  clearGroup(group);
+  $(this).one("click", drawBranch);
 };
 
-$(".indiBranch").one("click", drawBranch);
-$('.branchButton').hide();
- 
-
-//set the Pig
-whichPig = function(){
-        switch(piggy) {
-        case 'pig0':
-            setPig(0)
-            break;
-        case 'pig1':
-            setPig(1)
-            break;
-        case 'pig2':
-            setPig(2)
-            break;
-        case 'pig3':
-            setPig(3)
-            break;
-        case 'pig4':
-            setPig(4)
-            break;
-        default:
-            console.log('default');
-        }
+var whichPig = function(pigId) {
+  switch(pigId) {
+    case 'pig0': game.setPig(0); break;
+    case 'pig1': game.setPig(1); break;
+    case 'pig2': game.setPig(2); break;
+    case 'pig3': game.setPig(3); break;
+    case 'pig4': game.setPig(4); break;
+    default:
+      console.log('default');
+  }
 };
 
-drawPig = function(){
-    console.log("drawPig");
-    $(this).css('fill', 'rgba(34,139,34,0)')
-    console.log($(this).prop('id'))
-    piggy = $(this).prop('id');
-    whichPig(piggy);
-    $(this).one("click", deletePig)
-    $('.piggyButton').hide();
-    $('.branchButton').show();
+var drawPig = function() {
+  $(this).css('fill', 'rgba(34,139,34,0)')
+  whichPig($(this).prop('id'));
+  $(this).one("click", deletePig);
+  $('.piggyButton').hide();
+  $('.branchButton').show();
 };
 
-//erase pig position
-deletePig = function(){
-    console.log("deletePig");
-    $(this).css('fill', 'rgba(34,139,34,1)')
-    console.log($(this).prop('id'))
-    group = $(this).prop('id');
-    clearPig();
-    $(this).one("click", drawPig)
-    $('.piggyButton').show();
-    
+var deletePig = function() {
+  $(this).css('fill', 'rgba(34,139,34,1)')
+  group = $(this).prop('id');
+  game.clearPig();
+  $(this).one("click", drawPig)
+  $('.piggyButton').show();
 };
 
-$(".pigCover").one("click", drawPig);
-$('.readyButton').hide();
-$('.readyButton').click(function(){
-    $('.readyButton').hide();
-    $('.readyMonsterButton').show();
-})
-
-// monsTer trail graphics
-
-graphTrail = function(){
-  var graphCoordArrayX = [];
-  var graphCoordArrayY = [];
+var graphTrail = function() {
+  var graphCoordArrayX  = [];
+  var graphCoordArrayY  = [];
   var graphCoordArrayXY = [];
-  
-  for (var i=0; i<monsterTrail.length; i+=2){
-    graphCoordArrayX.push( [240 + (monsterTrail[i]*45)] )
+
+  for (var i=0; i < game.monster.trail.length; i+=2){
+    graphCoordArrayX.push( [240 + (game.monster.trail[i]*45)] )
   }
 
-  for (var j=1; j<monsterTrail.length; j+=2){
-    graphCoordArrayY.push([200+(monsterTrail[j]*120)])
+  for (var j=1; j < game.monster.trail.length; j+=2){
+    graphCoordArrayY.push([200+(game.monster.trail[j]*120)])
   }
-  
-  for (var k=0; k<graphCoordArrayX.length; k++) {
+
+  for (var k=0; k < graphCoordArrayX.length; k++) {
     graphCoordArrayXY.push( [graphCoordArrayY[k] - 290, graphCoordArrayX[k] - 195] )
   }
 
-  var result = "M" + graphCoordArrayXY.join(" ");
-  return result
+  return "M" + graphCoordArrayXY.join(" ");
 };
-
 
 //set the Monster
-whichMonster = function(){
-        switch(monster) {
-        case 'monster0':
-            setMonster(0)
-            break;
-        case 'monster1':
-            setMonster(1)
-            break;
-        case 'monster2':
-            setMonster(2)
-            break;
-        case 'monster3':
-            setMonster(3)
-            break;
-        case 'monster4':
-            setMonster(4)
-            break;
-        default:
-            console.log('default');
-        }
-};
-
-drawMonster = function(){
-    $(this).css('fill', 'rgba(100,149,237,0)')
-    log($(this).prop('id'))
-    monster = $(this).prop('id');
-    whichMonster(monster);
-    
-    $('#'+monster).prev().children().attr("path", graphTrail());
-    debugger
-    $(this).one("click", deleteMonster)
-    $('.readyMonsterButton').hide();
-    $('.monsterButton').show();
-};
-
-
-//erase monster position
-deleteMonster = function(){
-    log("deleteMonster");
-    $(this).css('fill', 'rgba(100,149,237,1)')
-    log($(this).prop('id'))
-    group = $(this).prop('id');
-    clearMonster();
-    $(this).one("click", drawMonster)
-    $('.monsterButton').show();
-};
-
-$(".monsterCover").one("click", drawMonster)
-$('.monsterButton').hide();
-$('.readyMonsterButton').hide();
-//end of monster drawing/delete
-
-// monster trail algorithm
-$(".monsterButton").click(function(){
-    log("unleash");
-    initMove();
-    moveAuto();
-    graphTrail();
-});
-
-
-
-
-// fail safe (iteration done on all positions)
-testWinner = function(){
-    if(monsterCol === pigCol){
-        log ("Bloody pig is gone");
-        testArray.push("true");
-    } else {
-        log ("Pig is still alive! Monster is dumb dumb")
-    }   testArray.push("false");
-    
-};
-
-monsterSuccess = function(x){
-return x === true;
-} 
-
-testRun = function(){
-    // for (i=0; i<colNum; i++){
-        setMonster(0);
-        initMove();
-        moveAuto();
-        if(testArray.some(monsterSuccess)===true){
-            log("Go ahead!")
-        } else{
-            log("Try not to build a castle.")
-        }
+var whichMonster = function(monster) {
+  switch(monster) {
+    case 'monster0': game.setMonster(0); break;
+    case 'monster1': game.setMonster(1); break;
+    case 'monster2': game.setMonster(2); break;
+    case 'monster3': game.setMonster(3); break;
+    case 'monster4': game.setMonster(4); break;
+    default:
+        console.console.log('default');
     }
-// };
+};
 
+var drawMonster = function() {
+  $(this).css('fill', 'rgba(100,149,237,0)');
+  monster = $(this).prop('id');
+  whichMonster(monster);
 
+  $('#'+monster).prev().children().attr("path", graphTrail());
+  $(this).one("click", deleteMonster);
+  $('.readyMonsterButton').hide();
+  $('.monsterButton').show();
+};
 
+var deleteMonster = function() {
+  $(this).css('fill', 'rgba(100,149,237,1)');
+  group = $(this).prop('id');
+  game.clearMonster();
+  $(this).one("click", drawMonster);
+  $('.monsterButton').show();
+};
 
+var testRun = function(){
+  // for (i=0; i<colNum; i++){
+    game.setMonster(0);
+    game.moveMonsterDown();
+    game.moveAuto();
+    if (game.branch.test.some(function(x){ return x === true })) {
+      console.log("Go ahead!");
+    } else{
+      console.log("Try not to build a castle.")
+    }
+  // }
+};
 
+$(document).ready(function() {
 
+  $(".indiBranch").one("click", drawBranch);
+  $('.branchButton').hide();
+  $(".pigCover").one("click", drawPig);
+  $('.readyButton').hide();
+  $('.readyButton').click(function() {
+      $('.readyButton').hide();
+      $('.readyMonsterButton').show();
+  })
+  $(".monsterCover").one("click", drawMonster);
+  $('.monsterButton').hide();
+  $('.readyMonsterButton').hide();
 
+  // monster trail algorithm
+  $(".monsterButton").click(function() {
+    console.log("unleash");
+    game.moveMonsterDown();
+    game.moveAuto();
+    graphTrail();
+  });
 
 });
-//end of jQuery
-
