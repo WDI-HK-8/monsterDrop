@@ -20,8 +20,7 @@
 <!-- specification / ready buttons -->
   <section class="container-fluid col-sm-12 mainscreen">
   	<div class="row">
-      <img class="col-sm-2 pigLet" src="/assets/images/Piglet_KH.png">
-      
+      <img id="pigBigPic" class="col-sm-2 pigLet" src="/assets/images/Piglet_KH.png">
       <ul class="list-unstyled settings">
         <li class="col-sm-4 ">You can still save me....
           <img src="/assets/images/monster 1_small.png"/>
@@ -40,7 +39,7 @@
         </li>
       </ul>
     
-    <svg version="1.1" baseProfile="full" width="900" height="600" id="playScreen" class="col-sm-offset-2"> 
+    <svg version="1.1" baseProfile="full" width="900" height="600" id="playScreen" class="col-sm-offset-2" viewBox="0, 0, 900, 600"> 
 
     <!-- background -->
       <rect id="sky" x="0" y="0" width="900" height="200" fill="#6495ED"/>
@@ -323,14 +322,14 @@
         <animate attributeName="x" attributeType="XML"
                  from="1200"  to="50"
                  begin="monsterButton.click+5s" dur="10s"
-                 fill="freeze" repeatCount="1"/>
+                 fill="remove" repeatCount="1"/>
       </text>
 
       <text id="pigLivesText" x="1200" y="150" > Monster: Where was my bacon? F#@&!#*#!*
       <animate attributeName="x" attributeType="XML"
                  from="1200"  to="50"
                  begin="monsterButton.click+5s" dur="10s"
-                 fill="freeze" repeatCount="1"/>
+                 fill="remove" repeatCount="1"/>
       </text>
     </svg>
 

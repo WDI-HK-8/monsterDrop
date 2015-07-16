@@ -91,7 +91,7 @@ Game.prototype.resetMatch = function() {
   $('.pigReadyButton').hide();
   $('.readyMonsterButton').hide();
   $('#monsterButton').hide();
-  $('#timer').text(15)
+  $('#timer').text(15);
 }
 
 
@@ -184,6 +184,7 @@ Game.prototype.testWinner = function() {
 };
 
 
+
 var game    = new Game();
 var timeLeft = $('#player').text() == " Protector"? 8 : 15;
 var numOfGames = 1;
@@ -205,7 +206,7 @@ var switchToPredator = function () {
   $('#player').text('Predator');
   $('.pigReadyButton').hide();
   $('.readyMonsterButton').show()
-
+  countDown();
 }
 
 var scoring = function(){
@@ -217,6 +218,7 @@ var scoring = function(){
     $('#P1').text(p1Win);
   }
 }
+
 
 //set branches in graphics
 var chooseGroup = function() {
@@ -345,6 +347,7 @@ var deletePig = function() {
   $('.piggyButton').show();
 };
 
+
 var graphTrail = function() {
   var graphCoordArrayX  = [];
   var graphCoordArrayY  = [];
@@ -356,10 +359,13 @@ var graphTrail = function() {
 
   for (var j=1; j < game.monster.trail.length; j+=2){
     graphCoordArrayX.push([200+(game.monster.trail[j]*120)])
+    console.log(game.monster.trail[j]);
+    console.log(graphCoordArrayX)
   }
 
+
   for (var k=0; k < graphCoordArrayX.length; k++) {
-    graphCoordArrayXY.push( [graphCoordArrayX[k]- playScreen.getBoundingClientRect().left, graphCoordArrayY[k] - 195] )
+    graphCoordArrayXY.push( [graphCoordArrayX[k]- (playScreen.getBoundingClientRect().left), graphCoordArrayY[k] - 195] )
   }
 
   return "M" + graphCoordArrayXY.join(" ");
@@ -374,7 +380,7 @@ var whichMonster = function() {
     case 'monster3': game.setMonster(3); break;
     case 'monster4': game.setMonster(4); break;
     default:
-        console.console.log('default');
+        console.log('default');
     }
 };
 
@@ -425,7 +431,9 @@ $(document).ready(function() {
   $('.pigReadyButton').click(function() {
       $('.pigReadyButton').hide();
       $('.readyMonsterButton').show();
+      
   })
+
   $(".monsterCover").one("click", drawMonster);
   $('#monsterButton').hide();
   $('.readyMonsterButton').hide();
@@ -449,7 +457,10 @@ $(document).ready(function() {
 });
   //player switch
   $(".pigReadyButton").mousedown(function(){
-    switchToPredator()
+    var oldSrc = "/assets/images/Piglet_KH.png"
+    var newSrc = "/assets/images/monster.jpg"
+    switchToPredator();
+    $('#pigBigPic').attr("src", newSrc);
   });
   $(".pigReadyButton").mouseup(function(){
     countDown() 
