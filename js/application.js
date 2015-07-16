@@ -11,7 +11,7 @@ var Monster = function() {
   this.trail = [];
 }
 
-var Branches = function() {
+var Branch = function() {
   this.id  = 1;
   this.all = [];
   this.test = [];
@@ -21,7 +21,7 @@ var Branches = function() {
 var Game = function() {
   this.pig      = new Pig();
   this.monster  = new Monster();
-  this.branches = new Branches();
+  this.branch = new Branch();
 
   this.colNum = 5;
   this.rowNum = 8;
@@ -74,12 +74,26 @@ Game.prototype.clearBranch = function(row, col) {
 };
 
 Game.prototype.clearScreen = function() {
-  for(var row=0; row < frame.length; row++){
-    for(var col=0; col < colNum; col++){
+  for(var row=0; row < this.frame.length; row++){
+    for(var col=0; col < this.colNum; col++){
       this.frame[row][col] = 0;
     }
   }
 };
+
+Game.prototype.resetMatch = function() {
+  game.clearScreen();
+  $('.indiBranch').css('stroke', 'rgba(139,69,19,0)');
+  $('.monsterCover').css('fill', 'rgba(100,149,237,1)');
+  $('.pigCover').css('fill', 'rgba(34,139,34,1)');
+  $('.piggyButton').show();
+  $('.branchButton').hide();
+  $('.pigReadyButton').hide();
+  $('.readyMonsterButton').hide();
+  $('#monsterButton').hide();
+  $('#timer').text(15)
+}
+
 
 //--------------------------------------------------
 // checkRoutes (right, left, down)
@@ -88,12 +102,9 @@ Game.prototype.checkRightSpot = function() {
   if (this.monster.col < this.colNum-1 &&
       this.frame[this.monster.row][this.monster.col+1] !== 0 &&
       this.frame[this.monster.row][this.monster.col+1] !== 9)
-  {
-    this.frame[this.monster.row][this.monster.col+1] = this.monster.id;
-    this.monster.col++;
-    return true;
-  } else {
-    return false;
+  {   return true;
+  }   else {
+      return false;
   }
 };
 
@@ -101,19 +112,14 @@ Game.prototype.checkLeftSpot = function() {
   if (this.monster.col - 1 >= 0 &&
       this.frame[this.monster.row][this.monster.col-1] !== 0 &&
       this.frame[this.monster.row][this.monster.col-1] !== 9)
-  {
-    this.frame[this.monster.row][this.monster.col-1] = this.monster.id;
-    this.monster.col--;
-    return true;
-  } else {
-    return false;
+  {   return true;
+  }   else {
+      return false;
   }
 };
 
 Game.prototype.checkDownSpot = function() {
   if(this.monster.row < this.frame.length) {
-    this.monster.row++;
-    this.frame[this.monster.row][this.monster.col] = this.monster.id;
     return true;
   } else {
     return false;
@@ -124,19 +130,33 @@ Game.prototype.checkDownSpot = function() {
 // Movements
 //--------------------------------------------------
 
-Game.prototype.moveMonsterDown = function() {
+Game.prototype.moveMonsterDownFirst = function() {
   this.frame[0][this.monster.col] = this.monster.id;
   this.monster.trail.push(0, this.monster.col);
 }
 
-// TODO: review checking if monster should move right VS move right
+Game.prototype.moveMonsterRight = function() {
+  this.frame[this.monster.row][this.monster.col+1] = this.monster.id;
+  this.monster.col++;
+}
+
+Game.prototype.moveMonsterLeft = function() {
+  this.frame[this.monster.row][this.monster.col-1] = this.monster.id;
+  this.monster.col--;
+}
+
+Game.prototype.moveMonsterDown = function() {
+    this.monster.row++;
+    this.frame[this.monster.row][this.monster.col] = this.monster.id;
+}
+
 Game.prototype.move = function() {
   if (this.checkRightSpot()) {
-      this.checkRightSpot();
+      this.moveMonsterRight();
   } else if (this.checkLeftSpot()){
-      this.checkLeftSpot();
+      this.moveMonsterLeft();
   } else {
-      this.checkDownSpot();
+      this.moveMonsterDown();
   }
   this.monster.trail.push(this.monster.row, this.monster.col);
 };
@@ -154,22 +174,49 @@ Game.prototype.moveAuto = function() {
 Game.prototype.testWinner = function() {
   if (this.monster.col === this.pig.col){
     console.log ("Bloody pig is gone");
-    this.branches.test.push("true");
+    $('#pigDiesText').css('fill', 'rgba(220,20,60,1)')
+    this.branch.test.push("true");
   } else {
     console.log ("Pig is still alive! Monster is dumb dumb");
-    this.branches.test.push("false");
+    $('#pigLivesText').css('fill', 'rgba(220,20,60,1)')
+    this.branch.test.push("false");
   }
 };
 
+
 var game    = new Game();
-var timeLeft = 20;
+var timeLeft = $('#player').text() == " Protector"? 8 : 15;
+var numOfGames = 1;
+var p2Win = 0;
+var p1Win = 0;
 
 //timer for Set up and respond
-var countDown = setInterval(function(){
-  if (--timeLeft <= 0){
-    clearInterval(countDown)
+var countDown = function(){
+  setInterval(function(){
+    if (--timeLeft <= 0){
+      clearInterval(countDown);
+    } else{$('#timer').text(timeLeft+"secs")
+      }
+  }, 1000);  
+};
+
+var switchToPredator = function () {
+  alert('Predator is up');
+  $('#player').text('Predator');
+  $('.pigReadyButton').hide();
+  $('.readyMonsterButton').show()
+
+}
+
+var scoring = function(){
+  if((numOfGames%2 !== 0)&&(game.monster.col === game.pig.col)){
+    p2Win++;
+    $('#P2').text(p2Win);
+  } else{
+    p1Win++;
+    $('#P1').text(p1Win);
   }
-}, 1000);
+}
 
 //set branches in graphics
 var chooseGroup = function() {
@@ -258,7 +305,7 @@ var drawBranch = function() {
   chooseGroup(group);
   $(this).one("click", deleteBranch);
   $('.branchButton').hide();
-  $('.readyButton').delay(5000).show();
+  $('.pigReadyButton').delay(5000).show();
 };
 
 var deleteBranch = function() {
@@ -284,6 +331,8 @@ var drawPig = function() {
   $(this).css('fill', 'rgba(34,139,34,0)')
   whichPig($(this).prop('id'));
   $(this).one("click", deletePig);
+  $('.pigCover').not($(this)).css('fill', 'rgba(34,139,34,1)');
+  countDown();
   $('.piggyButton').hide();
   $('.branchButton').show();
 };
@@ -302,22 +351,22 @@ var graphTrail = function() {
   var graphCoordArrayXY = [];
 
   for (var i=0; i < game.monster.trail.length; i+=2){
-    graphCoordArrayX.push( [240 + (game.monster.trail[i]*45)] )
+    graphCoordArrayY.push( [240 + (game.monster.trail[i]*45)] )
   }
 
   for (var j=1; j < game.monster.trail.length; j+=2){
-    graphCoordArrayY.push([200+(game.monster.trail[j]*120)])
+    graphCoordArrayX.push([200+(game.monster.trail[j]*120)])
   }
 
   for (var k=0; k < graphCoordArrayX.length; k++) {
-    graphCoordArrayXY.push( [graphCoordArrayY[k] - 290, graphCoordArrayX[k] - 195] )
+    graphCoordArrayXY.push( [graphCoordArrayX[k]- playScreen.getBoundingClientRect().left, graphCoordArrayY[k] - 195] )
   }
 
   return "M" + graphCoordArrayXY.join(" ");
 };
 
 //set the Monster
-var whichMonster = function(monster) {
+var whichMonster = function() {
   switch(monster) {
     case 'monster0': game.setMonster(0); break;
     case 'monster1': game.setMonster(1); break;
@@ -333,11 +382,10 @@ var drawMonster = function() {
   $(this).css('fill', 'rgba(100,149,237,0)');
   monster = $(this).prop('id');
   whichMonster(monster);
-
-  $('#'+monster).prev().children().attr("path", graphTrail());
   $(this).one("click", deleteMonster);
+  $('.monsterCover').not($(this)).css('fill', 'rgba(100,149,237,1)');
   $('.readyMonsterButton').hide();
-  $('.monsterButton').show();
+  $('#monsterButton').show();
 };
 
 var deleteMonster = function() {
@@ -345,13 +393,17 @@ var deleteMonster = function() {
   group = $(this).prop('id');
   game.clearMonster();
   $(this).one("click", drawMonster);
-  $('.monsterButton').show();
+  $('#monsterButton').show();
 };
 
+var updateDOMWithMonsterTrail = function(){
+$('#'+monster).prev().children('.monsterAnimation').attr("path", graphTrail());
+
+}
 var testRun = function(){
   // for (i=0; i<colNum; i++){
     game.setMonster(0);
-    game.moveMonsterDown();
+    game.moveMonsterDownFirst();
     game.moveAuto();
     if (game.branch.test.some(function(x){ return x === true })) {
       console.log("Go ahead!");
@@ -361,26 +413,47 @@ var testRun = function(){
   // }
 };
 
+
+
+
 $(document).ready(function() {
 
   $(".indiBranch").one("click", drawBranch);
   $('.branchButton').hide();
   $(".pigCover").one("click", drawPig);
-  $('.readyButton').hide();
-  $('.readyButton').click(function() {
-      $('.readyButton').hide();
+  $('.pigReadyButton').hide();
+  $('.pigReadyButton').click(function() {
+      $('.pigReadyButton').hide();
       $('.readyMonsterButton').show();
   })
   $(".monsterCover").one("click", drawMonster);
-  $('.monsterButton').hide();
+  $('#monsterButton').hide();
   $('.readyMonsterButton').hide();
 
   // monster trail algorithm
-  $(".monsterButton").click(function() {
+  $("#monsterButton").click(function() {
     console.log("unleash");
-    game.moveMonsterDown();
+    game.moveMonsterDownFirst();
     game.moveAuto();
-    graphTrail();
+    updateDOMWithMonsterTrail();
   });
+
+
+  //reset 
+  $('#resetBtn').click(function(){
+  console.log("reset clicked")
+  game.clearScreen();
+  game.resetMatch();
+
+  scoring();
+});
+  //player switch
+  $(".pigReadyButton").mousedown(function(){
+    switchToPredator()
+  });
+  $(".pigReadyButton").mouseup(function(){
+    countDown() 
+  });
+
 
 });
