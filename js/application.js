@@ -353,30 +353,19 @@ var graphTrail = function() {
   var graphCoordArrayY  = [];
   var graphCoordArrayXY = [];
 
-  var calNumber = 0;
-  var calibrate = function(){
-    switch(game.monster.trail[j]) {
-      case 0: calNumber = 120*2; break;
-      case 1: calNumber = 120*1; break;
-      case 2: calNumber = 120*0; break;
-      case 3: calNumber = -120*1; break;
-      case 4: calNumber = -120*2; break;
-      default:
-        console.log('default');
-    } 
-    return calNumber;
-  };
-
   for (var i=0; i < game.monster.trail.length; i+=2){
     graphCoordArrayY.push( [240 + (game.monster.trail[i]*45)] )
   }
 
   for (var j=1; j < game.monster.trail.length; j+=2){
-    graphCoordArrayX.push([200+(game.monster.trail[j]*120])
+    graphCoordArrayX.push([200+(game.monster.trail[j]*120)])
+    console.log(game.monster.trail[j]);
+    console.log(graphCoordArrayX)
   }
 
+
   for (var k=0; k < graphCoordArrayX.length; k++) {
-    graphCoordArrayXY.push( [graphCoordArrayX[k]- playScreen.getBoundingClientRect().left, graphCoordArrayY[k] - 195] )
+    graphCoordArrayXY.push( [graphCoordArrayX[k]- (playScreen.getBoundingClientRect().left), graphCoordArrayY[k] - 195] )
   }
 
   return "M" + graphCoordArrayXY.join(" ");
