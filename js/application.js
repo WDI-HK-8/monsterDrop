@@ -1,356 +1,459 @@
-// set up (frame, pig, monster, branch)
-var monster ;
-var pig;
-var frame =[];
+var Pig = function(){
+  this.id  = 8;
+  this.col = 0;
+  this.row = 7;
+}
 
-var game = { 
-    monster: 9,
-    pig: 8,
-    frame:[ [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0]],
+var Monster = function() {
+  this.id  = 9;
+  this.col = 0;
+  this.row = 0;
+  this.trail = [];
+}
+
+var Branch = function() {
+  this.id  = 1;
+  this.all = [];
+  this.test = [];
+}
+
+// set up (frame, pig, monster, branch)
+var Game = function() {
+  this.pig      = new Pig();
+  this.monster  = new Monster();
+  this.branch = new Branch();
+
+  this.colNum = 5;
+  this.rowNum = 8;
+  this.frame = [[0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0]];
+}
+
+//--------------------------------------------------
+// setElements
+//--------------------------------------------------
+Game.prototype.setPig = function(col) {
+  this.pig.col = col;
 };
 
+Game.prototype.setMonster = function(col) {
+  this.monster.col = col;
+};
 
-var colNum =5
-var rowNum;
+Game.prototype.setBranch = function(row, col) {
+  if (row < this.frame.length) {
+      this.frame[row][col]   = this.branch.id;
+      this.frame[row][col+1] = this.branch.id;
+  }
+};
 
-var monsterCol=0
-var monsterRow=0;
+//--------------------------------------------------
+// clearElements
+//--------------------------------------------------
+Game.prototype.clearPig = function() {
+  this.pig.col = null;
+};
 
-var pigCol;
-var pigRow = frame.length-1;
+Game.prototype.clearMonster = function() {
+  this.monster.col = null;
+};
 
-var branch = 1
-var branchPos =[];
+Game.prototype.clearBranch = function(row, col) {
+  if (row < this.frame.length  && col === 0) {
+    this.frame[row][col]   = 0;
+    this.frame[row][col+1] = 0;
+  } else {
+    this.frame[row][col+1] = 0;
+  }
+};
 
-var timeLeft = 20;
+Game.prototype.clearScreen = function() {
+  for(var row=0; row < this.frame.length; row++){
+    for(var col=0; col < this.colNum; col++){
+      this.frame[row][col] = 0;
+    }
+  }
+};
 
-var Mouse ={
-    x: 0,
-    y: 0,
+Game.prototype.resetMatch = function() {
+  game.clearScreen();
+  $('.indiBranch').css('stroke', 'rgba(139,69,19,0)');
+  $('.monsterCover').css('fill', 'rgba(100,149,237,1)');
+  $('.pigCover').css('fill', 'rgba(34,139,34,1)');
+  $('.piggyButton').show();
+  $('.branchButton').hide();
+  $('.pigReadyButton').hide();
+  $('.readyMonsterButton').hide();
+  $('#monsterButton').hide();
+  $('#timer').text(15)
 }
 
 
-DEBUG = true;
-
-var log = function(msg){
-    if (DEBUG) {
-        console.log(msg);
-    }
+//--------------------------------------------------
+// checkRoutes (right, left, down)
+//--------------------------------------------------
+Game.prototype.checkRightSpot = function() {
+  if (this.monster.col < this.colNum-1 &&
+      this.frame[this.monster.row][this.monster.col+1] !== 0 &&
+      this.frame[this.monster.row][this.monster.col+1] !== 9)
+  {   return true;
+  }   else {
+      return false;
+  }
 };
 
-// where player put the pig (must be last row)
-var setPig = function(col){
-    pigCol = col;
-    log("pig position" + pigCol);
-    
+Game.prototype.checkLeftSpot = function() {
+  if (this.monster.col - 1 >= 0 &&
+      this.frame[this.monster.row][this.monster.col-1] !== 0 &&
+      this.frame[this.monster.row][this.monster.col-1] !== 9)
+  {   return true;
+  }   else {
+      return false;
+  }
 };
 
-// where player put the monster (must be first row)
-var setMonster = function(col){
-    monsterCol = col;
-    log("monster position" + monsterCol);
-    
-}; 
-
-// set branch head (head --> end)
-var setBranch = function(row, col){
-    if((row<game.frame.length)){
-        game.frame[row][col] = branch;
-        game.frame[row][col+1] = branch;
-    }
-    branchPos = [row,col]; 
+Game.prototype.checkDownSpot = function() {
+  if(this.monster.row < this.frame.length) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
-//clear position and clear screen
-var clearPosition = function(row, col){
-    if(row<frame.length-1){
-    frame[row][col] = 0;
-    }
+//--------------------------------------------------
+// Movements
+//--------------------------------------------------
+
+Game.prototype.moveMonsterDownFirst = function() {
+  this.frame[0][this.monster.col] = this.monster.id;
+  this.monster.trail.push(0, this.monster.col);
+}
+
+Game.prototype.moveMonsterRight = function() {
+  this.frame[this.monster.row][this.monster.col+1] = this.monster.id;
+  this.monster.col++;
+}
+
+Game.prototype.moveMonsterLeft = function() {
+  this.frame[this.monster.row][this.monster.col-1] = this.monster.id;
+  this.monster.col--;
+}
+
+Game.prototype.moveMonsterDown = function() {
+    this.monster.row++;
+    this.frame[this.monster.row][this.monster.col] = this.monster.id;
+}
+
+Game.prototype.move = function() {
+  if (this.checkRightSpot()) {
+      this.moveMonsterRight();
+  } else if (this.checkLeftSpot()){
+      this.moveMonsterLeft();
+  } else {
+      this.moveMonsterDown();
+  }
+  this.monster.trail.push(this.monster.row, this.monster.col);
 };
 
-var clearScreen = function(row, col){
-    for(row=0; row < frame.length; row++){
-        for(col =0; col < colNum; col++){
-            frame[row][col] = 0;
-        }
-    }
+// monster go and eat
+Game.prototype.moveAuto = function() {
+  if (this.monster.row < this.frame.length-1) {
+    this.move();
+    this.moveAuto();
+  } else {
+    this.testWinner()
+  }
 };
+
+Game.prototype.testWinner = function() {
+  if (this.monster.col === this.pig.col){
+    console.log ("Bloody pig is gone");
+    $('#pigDiesText').css('fill', 'rgba(220,20,60,1)')
+    this.branch.test.push("true");
+  } else {
+    console.log ("Pig is still alive! Monster is dumb dumb");
+    $('#pigLivesText').css('fill', 'rgba(220,20,60,1)')
+    this.branch.test.push("false");
+  }
+};
+
+
+var game    = new Game();
+var timeLeft = $('#player').text() == " Protector"? 8 : 15;
+var numOfGames = 1;
+var p2Win = 0;
+var p1Win = 0;
 
 //timer for Set up and respond
-var minusSecond = function(){
-  timeLeft --;
-  return timeLeft;
+var countDown = function(){
+  setInterval(function(){
+    if (--timeLeft <= 0){
+      clearInterval(countDown);
+    } else{$('#timer').text(timeLeft+"secs")
+      }
+  }, 1000);  
 };
 
-var countDown = setInterval(function(){
-    minusSecond();
-    if(timeLeft <= 0){clearInterval(countDown)}
-},1000)
+var switchToPredator = function () {
+  alert('Predator is up');
+  $('#player').text('Predator');
+  $('.pigReadyButton').hide();
+  $('.readyMonsterButton').show()
 
-//test set up
-var test = function(){
-    setMonster(3);
-    setBranch(1,2);
-    setBranch(1,3);
-    setBranch(3,2);
-    setBranch(3,3);
-    setBranch(6,2);
-    setBranch(6,3);
-    setPig(2);
-    log(game.frame);
-};
-
-// movement
-var checkRightSpot = function(){
-    if((monsterCol<colNum-1)&&(game.frame[monsterRow][monsterCol+1] !== 0)&&(game.frame[monsterRow][monsterCol+1] !== 9)){
-    game.frame[monsterRow][monsterCol+1] = monster;
-    monsterCol++;
-    log(game.frame);
-    log('right');
-    return true
-} 
- return false   
-};
-
-var checkLeftSpot = function(){
-    if((monsterCol-1>=0)&&(game.frame[monsterRow][monsterCol-1] !== 0)&&(game.frame[monsterRow][monsterCol-1] !== 9)){
-    game.frame[monsterRow][monsterCol-1] = monster;
-    monsterCol--;
-    log(game.frame)
-    log('left')
-    return true;
-} 
-    return false;
-};
-    
-var checkDownSpot = function(){
-    if(monsterRow<game.frame.length){
-    monsterRow++;
-    game.frame[monsterRow][monsterCol] = monster;
-    log(game.frame)
-    log('down')
-    return true
-} 
-    return false
-}   ; 
-
-var move = function(){
-        if(checkRightSpot() === true){
-            checkRightSpot();
-        } else if (checkLeftSpot() === true){
-            checkLeftSpot();
-        } else {
-            checkDownSpot();
-        }
-};
-
-var winner = function(){
-    if(monsterCol === pigCol){
-        console.log ("Bloody pig is gone");
-    } else {
-        console.log ("Pig is still alive! Monster is dumb dumb")
-    }
-    
 }
 
+var scoring = function(){
+  if((numOfGames%2 !== 0)&&(game.monster.col === game.pig.col)){
+    p2Win++;
+    $('#P2').text(p2Win);
+  } else{
+    p1Win++;
+    $('#P1').text(p1Win);
+  }
+}
+
+//set branches in graphics
+var chooseGroup = function() {
+  switch (group) {
+    case 'group1':  game.setBranch(0,0); break;
+    case 'group2':  game.setBranch(1,0); break;
+    case 'group3':  game.setBranch(2,0); break;
+    case 'group4':  game.setBranch(3,0); break;
+    case 'group5':  game.setBranch(4,0); break;
+    case 'group6':  game.setBranch(5,0); break;
+    case 'group7':  game.setBranch(6,0); break;
+    case 'group8':  game.setBranch(7,0); break;
+    case 'group9':  game.setBranch(0,1); break;
+    case 'group10': game.setBranch(1,1); break;
+    case 'group11': game.setBranch(2,1); break;
+    case 'group12': game.setBranch(3,1); break;
+    case 'group13': game.setBranch(4,1); break;
+    case 'group14': game.setBranch(5,1); break;
+    case 'group15': game.setBranch(6,1); break;
+    case 'group16': game.setBranch(7,1); break;
+    case 'group17': game.setBranch(0,2); break;
+    case 'group18': game.setBranch(1,2); break;
+    case 'group19': game.setBranch(2,2); break;
+    case 'group20': game.setBranch(3,2); break;
+    case 'group21': game.setBranch(4,2); break;
+    case 'group22': game.setBranch(5,2); break;
+    case 'group23': game.setBranch(6,2); break;
+    case 'group24': game.setBranch(7,2); break;
+    case 'group25': game.setBranch(0,3); break;
+    case 'group26': game.setBranch(1,3); break;
+    case 'group27': game.setBranch(2,3); break;
+    case 'group28': game.setBranch(3,3); break;
+    case 'group29': game.setBranch(4,3); break;
+    case 'group30': game.setBranch(5,3); break;
+    case 'group31': game.setBranch(6,3); break;
+    case 'group32': game.setBranch(7,3); break;
+
+    default:
+        console.console.log('default');
+  }
+};
+
+//erase branches
+var clearGroup = function(){
+  switch(group) {
+    case 'group1':  game.clearBranch(0,0); break;
+    case 'group2':  game.clearBranch(1,0); break;
+    case 'group3':  game.clearBranch(2,0); break;
+    case 'group4':  game.clearBranch(3,0); break;
+    case 'group5':  game.clearBranch(4,0); break;
+    case 'group6':  game.clearBranch(5,0); break;
+    case 'group7':  game.clearBranch(6,0); break;
+    case 'group8':  game.clearBranch(7,0); break;
+    case 'group9':  game.clearBranch(0,1); break;
+    case 'group10': game.clearBranch(1,1); break;
+    case 'group11': game.clearBranch(2,1); break;
+    case 'group12': game.clearBranch(3,1); break;
+    case 'group13': game.clearBranch(4,1); break;
+    case 'group14': game.clearBranch(5,1); break;
+    case 'group15': game.clearBranch(6,1); break;
+    case 'group16': game.clearBranch(7,1); break;
+    case 'group17': game.clearBranch(0,2); break;
+    case 'group18': game.clearBranch(1,2); break;
+    case 'group19': game.clearBranch(2,2); break;
+    case 'group20': game.clearBranch(3,2); break;
+    case 'group21': game.clearBranch(4,2); break;
+    case 'group22': game.clearBranch(5,2); break;
+    case 'group23': game.clearBranch(6,2); break;
+    case 'group24': game.clearBranch(7,2); break;
+    case 'group25': game.clearBranch(0,3); break;
+    case 'group26': game.clearBranch(1,3); break;
+    case 'group27': game.clearBranch(2,3); break;
+    case 'group28': game.clearBranch(3,3); break;
+    case 'group29': game.clearBranch(4,3); break;
+    case 'group30': game.clearBranch(5,3); break;
+    case 'group31': game.clearBranch(6,3); break;
+    case 'group32': game.clearBranch(7,3); break;
+    default:
+      console.console.log('default');
+  }
+};
+
+var drawBranch = function() {
+  $(this).css('stroke', 'rgba(139,69,19,1)');
+  group = $(this).prop('id');
+  chooseGroup(group);
+  $(this).one("click", deleteBranch);
+  $('.branchButton').hide();
+  $('.pigReadyButton').delay(5000).show();
+};
+
+var deleteBranch = function() {
+  $(this).css('stroke', 'rgba(139,69,19,0)');
+  group = $(this).prop('id');
+  clearGroup(group);
+  $(this).one("click", drawBranch);
+};
+
+var whichPig = function(pigId) {
+  switch(pigId) {
+    case 'pig0': game.setPig(0); break;
+    case 'pig1': game.setPig(1); break;
+    case 'pig2': game.setPig(2); break;
+    case 'pig3': game.setPig(3); break;
+    case 'pig4': game.setPig(4); break;
+    default:
+      console.log('default');
+  }
+};
+
+var drawPig = function() {
+  $(this).css('fill', 'rgba(34,139,34,0)')
+  whichPig($(this).prop('id'));
+  $(this).one("click", deletePig);
+  $('.pigCover').not($(this)).css('fill', 'rgba(34,139,34,1)');
+  countDown();
+  $('.piggyButton').hide();
+  $('.branchButton').show();
+};
+
+var deletePig = function() {
+  $(this).css('fill', 'rgba(34,139,34,1)')
+  group = $(this).prop('id');
+  game.clearPig();
+  $(this).one("click", drawPig)
+  $('.piggyButton').show();
+};
+
+var graphTrail = function() {
+  var graphCoordArrayX  = [];
+  var graphCoordArrayY  = [];
+  var graphCoordArrayXY = [];
+
+  for (var i=0; i < game.monster.trail.length; i+=2){
+    graphCoordArrayY.push( [240 + (game.monster.trail[i]*45)] )
+  }
+
+  for (var j=1; j < game.monster.trail.length; j+=2){
+    graphCoordArrayX.push([200+(game.monster.trail[j]*120)])
+  }
+
+  for (var k=0; k < graphCoordArrayX.length; k++) {
+    graphCoordArrayXY.push( [graphCoordArrayX[k]- playScreen.getBoundingClientRect().left, graphCoordArrayY[k] - 195] )
+  }
+
+  return "M" + graphCoordArrayXY.join(" ");
+};
+
+//set the Monster
+var whichMonster = function() {
+  switch(monster) {
+    case 'monster0': game.setMonster(0); break;
+    case 'monster1': game.setMonster(1); break;
+    case 'monster2': game.setMonster(2); break;
+    case 'monster3': game.setMonster(3); break;
+    case 'monster4': game.setMonster(4); break;
+    default:
+        console.console.log('default');
+    }
+};
+
+var drawMonster = function() {
+  $(this).css('fill', 'rgba(100,149,237,0)');
+  monster = $(this).prop('id');
+  whichMonster(monster);
+  $(this).one("click", deleteMonster);
+  $('.monsterCover').not($(this)).css('fill', 'rgba(100,149,237,1)');
+  $('.readyMonsterButton').hide();
+  $('#monsterButton').show();
+};
+
+var deleteMonster = function() {
+  $(this).css('fill', 'rgba(100,149,237,1)');
+  group = $(this).prop('id');
+  game.clearMonster();
+  $(this).one("click", drawMonster);
+  $('#monsterButton').show();
+};
+
+var updateDOMWithMonsterTrail = function(){
+$('#'+monster).prev().children('.monsterAnimation').attr("path", graphTrail());
+
+}
+var testRun = function(){
+  // for (i=0; i<colNum; i++){
+    game.setMonster(0);
+    game.moveMonsterDownFirst();
+    game.moveAuto();
+    if (game.branch.test.some(function(x){ return x === true })) {
+      console.log("Go ahead!");
+    } else{
+      console.log("Try not to build a castle.")
+    }
+  // }
+};
 
 
-$(document).ready(function(){
-// colNum = parseInt($('.numOfColumn').val());
-// colWidth = 700/(colNum);
 
 
+$(document).ready(function() {
 
-$(document).on('click', '.indiBranch', function(){
-    console.log("indiBranch");
-    $(this).css('stroke', 'rgba(139,69,19,1)')
+  $(".indiBranch").one("click", drawBranch);
+  $('.branchButton').hide();
+  $(".pigCover").one("click", drawPig);
+  $('.pigReadyButton').hide();
+  $('.pigReadyButton').click(function() {
+      $('.pigReadyButton').hide();
+      $('.readyMonsterButton').show();
+  })
+  $(".monsterCover").one("click", drawMonster);
+  $('#monsterButton').hide();
+  $('.readyMonsterButton').hide();
+
+  // monster trail algorithm
+  $("#monsterButton").click(function() {
+    console.log("unleash");
+    game.moveMonsterDownFirst();
+    game.moveAuto();
+    updateDOMWithMonsterTrail();
+  });
+
+
+  //reset 
+  $('#resetBtn').click(function(){
+  console.log("reset clicked")
+  game.clearScreen();
+  game.resetMatch();
+
+  scoring();
+});
+  //player switch
+  $(".pigReadyButton").mousedown(function(){
+    switchToPredator()
+  });
+  $(".pigReadyButton").mouseup(function(){
+    countDown() 
+  });
+
 
 });
-
-$(document).on('dblclick', '.indiBranch', function(){
-    console.log("indiBranch");
-    $(this).css('stroke', 'rgba(139,69,19,0)')
-
-});
-
-
-        
-//draw background
-    $('.go').click(function(){
-      console.log("go button clicked")
-      
-
-    })
-
- 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-})//end of jQuery
-
-// branchCoordinatesX =[];
-// branchCoordinatesY =[];
-
-
-// // canvas drawing
-// background = function(){
-// colNum = parseInt($('.numOfColumn').val());
-// colWidth = 700/(colNum);
-
-//   canvas = document.getElementById("playScreen")
-//   ctx = canvas.getContext('2d');
-//   canvas.setAttribute('width', '800');
-//   canvas.setAttribute('height', '600');
-
-
-//   ctx.fillStyle = "#6495ED";
-//   sky = new Path2D();
-//   ctx.fillRect(0,0,800,200);
-
-//   ctx.fillStyle = "#228b22";
-//   grass = new Path2D();
-//   ctx.fillRect(0,200,800,400);
-
-//   cloud = new Path2D();
-//   ctx.lineWidth = 3;
-//   ctx.beginPath();
-//   ctx.moveTo(45, 139);
-//   ctx.quadraticCurveTo(61,97,89,110);  
-//   ctx.quadraticCurveTo(105,58,127,110);
-//   ctx.quadraticCurveTo(165,94,180,139);
-//   ctx.closePath(); 
-//   ctx.fillStyle = '#f8f8ff';
-//   ctx.fill();
-//   ctx.strokeStyle = '#f8f8ff';
-//   ctx.stroke();
-
-//   cloud2 = new Path2D();
-//   ctx.lineWidth = 3;
-//   ctx.beginPath();
-//   ctx.moveTo(200, 115);
-//   ctx.quadraticCurveTo(216,72,244,86);  
-//   ctx.quadraticCurveTo(260,34,282,86);
-//   ctx.quadraticCurveTo(320,70,335,115);
-//   ctx.closePath(); 
-//   ctx.fillStyle = '#f8f8ff';
-//   ctx.fill();
-//   ctx.strokeStyle = '#f8f8ff';
-//   ctx.stroke();
-
-//   cloud3 = new Path2D();
-//   ctx.lineWidth = 3;
-//   ctx.beginPath();
-//   ctx.moveTo(360, 165);
-//   ctx.quadraticCurveTo(376,122,404,136);  
-//   ctx.quadraticCurveTo(420,84,432,136);
-//   ctx.quadraticCurveTo(480,120,495,165);
-//   ctx.closePath(); 
-//   ctx.fillStyle = '#f8f8ff';
-//   ctx.fill();
-//   ctx.strokeStyle = '#f8f8ff';
-//   ctx.stroke();
-
-//   cloud4 = new Path2D();
-//   ctx.lineWidth = 3;
-//   ctx.beginPath();
-//   ctx.moveTo(520, 100);
-//   ctx.quadraticCurveTo(536,57,564,71);  
-//   ctx.quadraticCurveTo(580,40,592,71);
-//   ctx.quadraticCurveTo(640,55,670,100);
-//   ctx.closePath(); 
-//   ctx.fillStyle = '#f8f8ff';
-//   ctx.fill();
-//   ctx.strokeStyle = '#f8f8ff';
-//   ctx.stroke();
-
-// //maze
-//   columns = new Path2D();
-//     for(i=0; i<colNum; i++){
-//       ctx.lineWidth = 14;
-//       ctx.lineCap ='round';
-//       ctx.beginPath();
-//       ctx.moveTo(600/(colNum)+(i*colWidth), 240);
-//       ctx.lineTo(600/(colNum)+(i*colWidth), 540);
-//       ctx.strokeStyle = '#90ee90'
-//       ctx.stroke();  
-//     };
-
-//   wayPoints = new Path2D();
-//   for(k=0; k<colNum; k++){
-//     for (j=0; j<game.frame.length; j++){
-//     ctx.lineWidth = 5;
-//     ctx.lineCap = 'round';
-//     ctx.beginPath();
-//     ctx.moveTo(600/(colNum)+(k*colWidth), 240+(j*(300/(game.frame.length-1))));
-//     ctx.lineTo(600/(colNum)+(k*colWidth), 240.1+(j*(300/(game.frame.length-1))));
-//     ctx.strokeStyle = '#d2691e';
-//     ctx.stroke();
-//     console.log(600/(colNum)+(k*colWidth), 240+(j*(300/(game.frame.length-1))))      
-//     branchCoordinatesX.push(600/(colNum)+(k*colWidth));
-//     branchCoordinatesY.push(240+(j*(300/(game.frame.length-1))));
-//     }}
-
-// };// end of canvas drawing (background fucntion())
-
-
-// //draw branch
-
-// getMousePos = function(e){
-//     mx = e.clientX - playScreen.getBoundingClientRect().left; 
-//     my = e.clientY - playScreen.getBoundingClientRect().top; 
-//     console.log(mx, my)
-
-// }
-
-
-// $('#playScreen').click(function(e){
-//   console.log("canvas clicked");
-//   getMousePos(e);
-//   for (i=0; i<branchCoordinatesX.length; i++){
-//     for (j=0; j<branchCoordinatesY.length; j++){
-//         if((mx == Math.round((branchCoordinatesX[i]/10)*10)) && (my == Math.round((branchCoordinatesY[j]/10)*10)) && (my !== branchCoordinatesX[branchCoordinatesX-1])){
-//         branches();
-//         } else {
-//             console.log ("cannot set up branch")
-//         }
-//     }
-//   }
-//   });
-
-
-//     branches = function(){
-//     canvas = document.getElementById("playScreen")
-//     ctx = canvas.getContext('2d');
-
-//     branch = new Path2D();
-//     ctx.lineWidth = 10;
-//     ctx.lineCap = 'round';
-//     ctx.beginPath();
-//     ctx.moveTo(mx, my);
-//     ctx.lineTo(mx+colWidth, my);
-//     ctx.strokeStyle = '#8b4513';
-//     ctx.stroke();
-// }
-
-
-
-
-
-  
